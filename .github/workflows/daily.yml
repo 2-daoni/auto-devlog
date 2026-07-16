@@ -1,0 +1,16 @@
+name: Run auto-devlog pipeline
+
+on:
+  schedule:
+    - cron: "0 22 * * *" # 매일 UTC 22:00 = KST 07:00
+  workflow_dispatch: {} # 수동 실행 버튼도 활성화
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call pipeline endpoint
+        run: |
+          curl -X POST "${{ secrets.DEPLOY_URL }}/api/pipeline/run" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --fail-with-body
