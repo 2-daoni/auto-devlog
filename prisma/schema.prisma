@@ -10,15 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum PostStatus {
-  COLLECTED     // [1] 수집만 된 상태
-  SUMMARIZED    // [3] 요약 완료
-  TRANSLATED    // [4] 번역 완료
-  CODE_ADDED    // [5] 예제코드 보강 완료
-  SEO_CHECKED   // [7] SEO 체크 완료, 발행 대기
-  PUBLISHED     // [8] 발행 완료
-  FAILED        // 파이프라인 중 에러 발생
-}
+// SQLite는 enum을 지원하지 않아 String으로 관리.
+// 값: COLLECTED | SUMMARIZED | TRANSLATED | CODE_ADDED | SEO_CHECKED | PUBLISHED | FAILED
 
 model Post {
   id             String     @id @default(cuid())
@@ -37,7 +30,7 @@ model Post {
   seoScore       Int?       // 자체 SEO 체크 점수 (0~100)
   seoIssues      String?    // JSON string, 체크리스트 미통과 항목
 
-  status         PostStatus @default(COLLECTED)
+  status         String     @default("COLLECTED")
   errorMessage   String?
 
   createdAt      DateTime   @default(now())
